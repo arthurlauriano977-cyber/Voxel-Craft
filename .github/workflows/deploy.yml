@@ -1,0 +1,15 @@
+  - name: Prepare public directory
+    run: |
+      rm -rf public
+      mkdir public
+      # copy launchers
+      cp -r launchers/* public/
+      # copy submodule directories if present
+      if [ -d "eaglercraft-1.8.8" ]; then cp -r eaglercraft-1.8.8 public/eaglercraft-1.8.8; fi
+      if [ -d "eaglercraft-1.12.2" ]; then cp -r eaglercraft-1.12.2 public/eaglercraft-1.12.2; fi
+
+  - name: Deploy to GitHub Pages
+    uses: peaceiris/actions-gh-pages@v4
+    with:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
+      publish_dir: ./public

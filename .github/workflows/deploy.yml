@@ -1,12 +1,28 @@
+name: Vendorize Eaglercraft builds and deploy to GitHub Pages on: push: branches: [ main ] workflow_dispatch: {}
+
+jobs: deploy: runs-on: ubuntu-latest steps: - name: Checkout repo uses: actions/checkout@v4
+
+  - name: Clone upstream Eaglercraft repositories
+    run: |
+      rm -rf tmp_upstream
+      mkdir tmp_upstream
+      # 1.8.8 upstream
+      git clone --depth 1 https://github.com/Eaglercraft-Archive/Eaglercraftx-1.8.8-src tmp_upstream/eaglercraft-1.8.8 || true
+      # 1.12.2 upstream (may be a collection of builds)
+      git clone --depth 1 https://github.com/jadenacoder/Eaglercraft-1.12.2 tmp_upstream/eaglercraft-1.12.2 || true
+
   - name: Prepare public directory
     run: |
       rm -rf public
       mkdir public
-      # copy launchers
       cp -r launchers/* public/
-      # copy submodule directories if present
-      if [ -d "eaglercraft-1.8.8" ]; then cp -r eaglercraft-1.8.8 public/eaglercraft-1.8.8; fi
-      if [ -d "eaglercraft-1.12.2" ]; then cp -r eaglercraft-1.12.2 public/eaglercraft-1.12.2; fi
+      # copy upstream clones if they exist
+      if [ -d "tmp_upstream/eaglercraft-1.8.8" ]; then cp -r tmp_upstream/eaglercraft-1.8.8 public/eaglercraft-1.8.8; fi
+      if [ -d "tmp_upstream/eaglercraft-1.12.2" ]; then cp -r tmp_upstream/eaglercraft-1.12.2 public/eaglercraft-1.12.2; fi
+
+  - name: Clean potentially large VCS metadata
+    run: |
+      find public -type d -name ".git" -print -exec rm -rf {} + || true
 
   - name: Deploy to GitHub Pages
     uses: peaceiris/actions-gh-pages@v4

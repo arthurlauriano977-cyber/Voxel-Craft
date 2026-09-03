@@ -1,0 +1,17 @@
+# Submódulos do Eaglercraft
+
+Este arquivo configura os submódulos que trazem os upstreams do Eaglercraft.
+
+Ao clonar este repositório, execute:
+
+  git submodule update --init --recursive
+
+para baixar os submódulos referenciados abaixo.
+
+[submodule "eaglercraft-1.8.8"]
+	path = eaglercraft-1.8.8
+	url = https://github.com/Eaglercraft-Archive/Eaglercraftx-1.8.8-src
+
+[submodule "eaglercraft-1.12.2"]
+	path = eaglercraft-1.12.2
+	url = https://github.com/jadenacoder/Eaglercraft-1.12.2
